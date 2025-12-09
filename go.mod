@@ -19,24 +19,23 @@ require (
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/opencontainers/runc v1.2.6
 	github.com/sirupsen/logrus v1.9.3
-	github.com/spf13/cobra v1.9.1
-	github.com/spf13/pflag v1.0.6
-	github.com/stretchr/testify v1.10.0
-	github.com/vishvananda/netlink v1.3.1
-	golang.org/x/sync v0.12.0
-	golang.org/x/sys v0.31.0
-	google.golang.org/grpc v1.72.1
-	k8s.io/api v0.34.0
-	k8s.io/apimachinery v0.34.0
-	k8s.io/apiserver v0.34.0
-	k8s.io/client-go v0.34.0
-	k8s.io/component-base v0.34.0
-	k8s.io/component-helpers v0.34.0
-	k8s.io/cri-api v0.34.0
-	k8s.io/cri-client v0.34.0
-	k8s.io/kubelet v0.34.0
-	k8s.io/kubernetes v1.34.0
-	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
+	github.com/spf13/cobra v1.8.0
+	github.com/spf13/pflag v1.0.5
+	github.com/stretchr/testify v1.9.0
+	github.com/vishvananda/netlink v1.2.1-beta.2
+	golang.org/x/sync v0.14.0
+	golang.org/x/sys v0.33.0
+	google.golang.org/grpc v1.62.0
+	k8s.io/api v0.29.15
+	k8s.io/apimachinery v0.29.15
+	k8s.io/apiserver v0.29.15
+	k8s.io/client-go v0.29.15
+	k8s.io/component-base v0.29.15
+	k8s.io/component-helpers v0.29.15
+	k8s.io/cri-api v0.29.15
+	k8s.io/kubelet v0.0.0
+	k8s.io/kubernetes v1.29.15
+	k8s.io/utils v0.0.0-20230726121419-3b25d923346b
 )
 
 require (

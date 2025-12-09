@@ -25,7 +25,11 @@ import (
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	runtimeapi "k8s.io/cri-api/pkg/apis/runtime/v1"
+<<<<<<< HEAD
 	"k8s.io/cri-client/pkg/util"
+=======
+	"k8s.io/kubernetes/pkg/kubelet/util"
+>>>>>>> f3cc7d89 ([release/0.3] Remove deprecated runtime/v1alpha2 support (#525))
 
 	"github.com/Mirantis/cri-dockerd/core"
 )
