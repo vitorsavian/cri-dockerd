@@ -18,7 +18,7 @@ import (
 type token struct{}
 
 // A Group is a collection of goroutines working on subtasks that are part of
-// the same overall task.
+// the same overall task. A Group should not be reused for different tasks.
 //
 // A zero Group is valid, has no limit on the number of active goroutines,
 // and does not cancel on error.
@@ -61,13 +61,6 @@ func (g *Group) Wait() error {
 }
 
 // Go calls the given function in a new goroutine.
-<<<<<<< HEAD
-// It blocks until the new goroutine can be added without the number of
-// active goroutines in the group exceeding the configured limit.
-//
-// The first call to return a non-nil error cancels the group's context, if the
-// group was created by calling WithContext. The error will be returned by Wait.
-=======
 //
 // The first call to Go must happen before a Wait.
 // It blocks until the new goroutine can be added without the number of
@@ -76,7 +69,6 @@ func (g *Group) Wait() error {
 // The first goroutine in the group that returns a non-nil error will
 // cancel the associated Context, if any. The error will be returned
 // by Wait.
->>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 func (g *Group) Go(f func() error) {
 	if g.sem != nil {
 		g.sem <- token{}
@@ -86,8 +78,6 @@ func (g *Group) Go(f func() error) {
 	go func() {
 		defer g.done()
 
-<<<<<<< HEAD
-=======
 		// It is tempting to propagate panics from f()
 		// up to the goroutine that calls Wait, but
 		// it creates more problems than it solves:
@@ -100,7 +90,6 @@ func (g *Group) Go(f func() error) {
 		//   that prevents the Wait call from being reached.
 		// See #53757, #74275, #74304, #74306.
 
->>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 		if err := f(); err != nil {
 			g.errOnce.Do(func() {
 				g.err = err

@@ -22,21 +22,16 @@ import (
 	"net/url"
 	"reflect"
 	"sync"
+	"testing"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/util/flowcontrol"
 	runtimeapi "k8s.io/cri-api/pkg/apis/runtime/v1"
-	"k8s.io/kubernetes/pkg/credentialprovider"
 	kubecontainer "k8s.io/kubernetes/pkg/kubelet/container"
-	kubetypes "k8s.io/kubernetes/pkg/kubelet/types"
 	"k8s.io/kubernetes/pkg/volume"
 )
-
-type TB interface {
-	Errorf(format string, args ...any)
-}
 
 type FakePod struct {
 	Pod       *kubecontainer.Pod
@@ -62,7 +57,6 @@ type FakeRuntime struct {
 	VersionInfo       string
 	APIVersionInfo    string
 	RuntimeType       string
-	SyncResults       *kubecontainer.PodSyncResult
 	Err               error
 	InspectErr        error
 	StatusErr         error
@@ -71,8 +65,7 @@ type FakeRuntime struct {
 	// from container runtime.
 	BlockImagePulls      bool
 	imagePullTokenBucket chan bool
-	SwapBehavior         map[string]kubetypes.SwapBehavior
-	T                    TB
+	T                    *testing.T
 }
 
 const FakeHost = "localhost:12345"
@@ -241,9 +234,6 @@ func (f *FakeRuntime) SyncPod(_ context.Context, pod *v1.Pod, _ *kubecontainer.P
 	for _, c := range pod.Spec.Containers {
 		f.StartedContainers = append(f.StartedContainers, c.Name)
 	}
-	if f.SyncResults != nil {
-		return *f.SyncResults
-	}
 	// TODO(random-liu): Add SyncResult for starting and killing containers
 	if f.Err != nil {
 		result.Fail(f.Err)
@@ -289,13 +279,13 @@ func (f *FakeRuntime) KillContainerInPod(container v1.Container, pod *v1.Pod) er
 	return f.Err
 }
 
-func (f *FakeRuntime) GeneratePodStatus(event *runtimeapi.ContainerEventResponse) *kubecontainer.PodStatus {
+func (f *FakeRuntime) GeneratePodStatus(event *runtimeapi.ContainerEventResponse) (*kubecontainer.PodStatus, error) {
 	f.Lock()
 	defer f.Unlock()
 
 	f.CalledFunctions = append(f.CalledFunctions, "GeneratePodStatus")
 	status := f.PodStatus
-	return &status
+	return &status, f.Err
 }
 
 func (f *FakeRuntime) GetPodStatus(_ context.Context, uid types.UID, name, namespace string) (*kubecontainer.PodStatus, error) {
@@ -315,7 +305,7 @@ func (f *FakeRuntime) GetContainerLogs(_ context.Context, pod *v1.Pod, container
 	return f.Err
 }
 
-func (f *FakeRuntime) PullImage(ctx context.Context, image kubecontainer.ImageSpec, creds []credentialprovider.TrackedAuthConfig, podSandboxConfig *runtimeapi.PodSandboxConfig) (string, *credentialprovider.TrackedAuthConfig, error) {
+func (f *FakeRuntime) PullImage(ctx context.Context, image kubecontainer.ImageSpec, pullSecrets []v1.Secret, podSandboxConfig *runtimeapi.PodSandboxConfig) (string, error) {
 	f.Lock()
 	f.CalledFunctions = append(f.CalledFunctions, "PullImage")
 	if f.Err == nil {
@@ -326,15 +316,9 @@ func (f *FakeRuntime) PullImage(ctx context.Context, image kubecontainer.ImageSp
 		f.ImageList = append(f.ImageList, i)
 	}
 
-	// if credentials were supplied for the pull at least return the first in the list
-	var retCreds *credentialprovider.TrackedAuthConfig = nil
-	if len(creds) > 0 {
-		retCreds = &creds[0]
-	}
-
 	if !f.BlockImagePulls {
 		f.Unlock()
-		return image.Image, retCreds, f.Err
+		return image.Image, f.Err
 	}
 
 	retErr := f.Err
@@ -347,8 +331,7 @@ func (f *FakeRuntime) PullImage(ctx context.Context, image kubecontainer.ImageSp
 	case <-ctx.Done():
 	case <-f.imagePullTokenBucket:
 	}
-
-	return image.Image, retCreds, retErr
+	return image.Image, retErr
 }
 
 // UnblockImagePulls unblocks a certain number of image pulls, if BlockImagePulls is true.
@@ -374,14 +357,6 @@ func (f *FakeRuntime) GetImageRef(_ context.Context, image kubecontainer.ImageSp
 		}
 	}
 	return "", f.InspectErr
-}
-
-func (f *FakeRuntime) GetImageSize(_ context.Context, image kubecontainer.ImageSpec) (uint64, error) {
-	f.Lock()
-	defer f.Unlock()
-
-	f.CalledFunctions = append(f.CalledFunctions, "GetImageSize")
-	return 0, f.Err
 }
 
 func (f *FakeRuntime) ListImages(_ context.Context) ([]kubecontainer.Image, error) {
@@ -529,19 +504,4 @@ func (f *FakeContainerCommandRunner) RunInContainer(_ context.Context, container
 	f.Cmd = cmd
 
 	return []byte(f.Stdout), f.Err
-}
-
-func (f *FakeRuntime) GetContainerStatus(_ context.Context, _ kubecontainer.ContainerID) (status *kubecontainer.Status, err error) {
-	f.Lock()
-	defer f.Unlock()
-
-	f.CalledFunctions = append(f.CalledFunctions, "GetContainerStatus")
-	return nil, f.Err
-}
-
-func (f *FakeRuntime) GetContainerSwapBehavior(pod *v1.Pod, container *v1.Container) kubetypes.SwapBehavior {
-	if f.SwapBehavior != nil && f.SwapBehavior[container.Name] != "" {
-		return f.SwapBehavior[container.Name]
-	}
-	return kubetypes.NoSwap
 }

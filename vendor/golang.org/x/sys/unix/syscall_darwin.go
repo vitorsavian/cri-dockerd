@@ -602,8 +602,6 @@ func Connectx(fd int, srcIf uint32, srcAddr, dstAddr Sockaddr, associd SaeAssocI
 	return
 }
 
-<<<<<<< HEAD
-=======
 const minIovec = 8
 
 func Readv(fd int, iovs [][]byte) (n int, err error) {
@@ -693,7 +691,6 @@ func readvRacedetect(iovecs []Iovec, n int, err error) {
 	}
 }
 
->>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 //sys	connectx(fd int, endpoints *SaEndpoints, associd SaeAssocID, flags uint32, iov []Iovec, n *uintptr, connid *SaeConnID) (err error)
 //sys	sendfile(infd int, outfd int, offset int64, len *int64, hdtr unsafe.Pointer, flags int) (err error)
 
@@ -797,3 +794,7 @@ func readvRacedetect(iovecs []Iovec, n int, err error) {
 //sys	write(fd int, p []byte) (n int, err error)
 //sys	mmap(addr uintptr, length uintptr, prot int, flag int, fd int, pos int64) (ret uintptr, err error)
 //sys	munmap(addr uintptr, length uintptr) (err error)
+//sys	readv(fd int, iovecs []Iovec) (n int, err error)
+//sys	preadv(fd int, iovecs []Iovec, offset int64) (n int, err error)
+//sys	writev(fd int, iovecs []Iovec) (n int, err error)
+//sys	pwritev(fd int, iovecs []Iovec, offset int64) (n int, err error)

@@ -17,25 +17,25 @@ require (
 	github.com/opencontainers/cgroups v0.0.1
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.1
-	github.com/opencontainers/runc v1.2.6
+	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/spf13/cobra v1.8.0
-	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.9.0
+	github.com/spf13/cobra v1.9.1
+	github.com/spf13/pflag v1.0.6
+	github.com/stretchr/testify v1.10.0
 	github.com/vishvananda/netlink v1.2.1-beta.2
 	golang.org/x/sync v0.19.0
 	golang.org/x/sys v0.40.0
-	google.golang.org/grpc v1.62.1
-	k8s.io/api v0.29.15
-	k8s.io/apimachinery v0.29.15
-	k8s.io/apiserver v0.29.15
-	k8s.io/client-go v0.29.15
-	k8s.io/component-base v0.29.15
-	k8s.io/component-helpers v0.29.15
-	k8s.io/cri-api v0.29.15
+	google.golang.org/grpc v1.72.1
+	k8s.io/api v0.34.0
+	k8s.io/apimachinery v0.34.0
+	k8s.io/apiserver v0.34.0
+	k8s.io/client-go v0.34.0
+	k8s.io/component-base v0.34.0
+	k8s.io/component-helpers v0.34.0
+	k8s.io/cri-api v0.34.0
 	k8s.io/kubelet v0.0.0
 	k8s.io/kubernetes v1.29.15
-	k8s.io/utils v0.0.0-20230726121419-3b25d923346b
+	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 )
 
 require (
@@ -52,7 +52,7 @@ require (
 	github.com/containerd/cgroups v1.1.0 // indirect
 	github.com/containerd/containerd v1.6.26 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
-	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
+	github.com/cyphar/filepath-securejoin v0.5.2 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.2 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -79,6 +79,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
+	github.com/lithammer/dedent v1.1.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/moby/spdystream v0.5.0 // indirect
 	github.com/moby/sys/mountinfo v0.7.2 // indirect
@@ -89,16 +90,15 @@ require (
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
+	github.com/opencontainers/runc v1.2.9 // indirect
 	github.com/opencontainers/runtime-spec v1.2.0 // indirect
-	github.com/opencontainers/selinux v1.11.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
+	github.com/opencontainers/selinux v1.13.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_golang v1.16.0 // indirect
-	github.com/prometheus/client_model v0.4.0 // indirect
-	github.com/prometheus/common v0.44.0 // indirect
-	github.com/prometheus/procfs v0.10.1 // indirect
-	github.com/rogpeppe/go-internal v1.11.0 // indirect
-	github.com/stoewer/go-strcase v1.2.0 // indirect
+	github.com/prometheus/client_golang v1.22.0 // indirect
+	github.com/prometheus/client_model v0.6.1 // indirect
+	github.com/prometheus/common v0.62.0 // indirect
+	github.com/prometheus/procfs v0.15.1 // indirect
+	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/vishvananda/netns v0.0.5 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
@@ -134,7 +134,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/apiextensions-apiserver v0.32.0 // indirect
-	k8s.io/controller-manager v0.0.0 // indirect
+	k8s.io/cloud-provider v0.0.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250710124328-f3f2b991d03b // indirect
 	k8s.io/mount-utils v0.32.0 // indirect

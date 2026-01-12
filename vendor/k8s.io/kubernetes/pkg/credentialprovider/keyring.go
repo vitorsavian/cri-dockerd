@@ -17,9 +17,6 @@ limitations under the License.
 package credentialprovider
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
 	"net"
 	"net/url"
 	"path/filepath"
@@ -27,9 +24,7 @@ import (
 	"strings"
 
 	"k8s.io/apimachinery/pkg/util/sets"
-	utilfeature "k8s.io/apiserver/pkg/util/feature"
 	"k8s.io/klog/v2"
-	"k8s.io/kubernetes/pkg/features"
 )
 
 // DockerKeyring tracks a set of docker registry credentials, maintaining a
@@ -40,67 +35,19 @@ import (
 //     most specific match for a given image
 //   - iterating a map does not yield predictable results
 type DockerKeyring interface {
-	Lookup(image string) ([]TrackedAuthConfig, bool)
+	Lookup(image string) ([]AuthConfig, bool)
 }
 
 // BasicDockerKeyring is a trivial map-backed implementation of DockerKeyring
 type BasicDockerKeyring struct {
 	index []string
-	creds map[string][]TrackedAuthConfig
+	creds map[string][]AuthConfig
 }
 
 // providersDockerKeyring is an implementation of DockerKeyring that
 // materializes its dockercfg based on a set of dockerConfigProviders.
 type providersDockerKeyring struct {
 	Providers []DockerConfigProvider
-}
-
-// TrackedAuthConfig wraps the AuthConfig and adds information about the source
-// of the credentials.
-type TrackedAuthConfig struct {
-	AuthConfig
-	AuthConfigHash string
-
-	Source *CredentialSource
-}
-
-// NewTrackedAuthConfig initializes the TrackedAuthConfig structure by adding
-// the source information to the supplied AuthConfig. It also counts a hash of the
-// AuthConfig and keeps it in the returned structure.
-//
-// The supplied CredentialSource is only used when the "KubeletEnsureSecretPulledImages"
-// is enabled, the same applies for counting the hash.
-func NewTrackedAuthConfig(c *AuthConfig, src *CredentialSource) *TrackedAuthConfig {
-	if c == nil {
-		panic("cannot construct TrackedAuthConfig with a nil AuthConfig")
-	}
-
-	authConfig := &TrackedAuthConfig{
-		AuthConfig: *c,
-	}
-
-	if utilfeature.DefaultFeatureGate.Enabled(features.KubeletEnsureSecretPulledImages) {
-		authConfig.Source = src
-		authConfig.AuthConfigHash = hashAuthConfig(c)
-	}
-	return authConfig
-}
-
-type CredentialSource struct {
-	Secret         *SecretCoordinates
-	ServiceAccount *ServiceAccountCoordinates
-}
-
-type SecretCoordinates struct {
-	UID       string
-	Namespace string
-	Name      string
-}
-
-type ServiceAccountCoordinates struct {
-	UID       string
-	Namespace string
-	Name      string
 }
 
 // AuthConfig contains authorization information for connecting to a Registry
@@ -125,13 +72,11 @@ type AuthConfig struct {
 	RegistryToken string `json:"registrytoken,omitempty"`
 }
 
-// Add inserts the docker config `cfg` into the basic docker keyring. It attaches
-// the `src` information that describes where the docker config `cfg` comes from.
-// `src` is nil if the docker config is globally available on the node.
-func (dk *BasicDockerKeyring) Add(src *CredentialSource, cfg DockerConfig) {
+// Add add some docker config in basic docker keyring
+func (dk *BasicDockerKeyring) Add(cfg DockerConfig) {
 	if dk.index == nil {
 		dk.index = make([]string, 0)
-		dk.creds = make(map[string][]TrackedAuthConfig)
+		dk.creds = make(map[string][]AuthConfig)
 	}
 	for loc, ident := range cfg {
 		creds := AuthConfig{
@@ -166,9 +111,7 @@ func (dk *BasicDockerKeyring) Add(src *CredentialSource, cfg DockerConfig) {
 		} else {
 			key = parsed.Host
 		}
-		trackedCreds := NewTrackedAuthConfig(&creds, src)
-
-		dk.creds[key] = append(dk.creds[key], *trackedCreds)
+		dk.creds[key] = append(dk.creds[key], creds)
 		dk.index = append(dk.index, key)
 	}
 
@@ -292,9 +235,9 @@ func URLsMatch(globURL *url.URL, targetURL *url.URL) (bool, error) {
 // Lookup implements the DockerKeyring method for fetching credentials based on image name.
 // Multiple credentials may be returned if there are multiple potentially valid credentials
 // available.  This allows for rotation.
-func (dk *BasicDockerKeyring) Lookup(image string) ([]TrackedAuthConfig, bool) {
+func (dk *BasicDockerKeyring) Lookup(image string) ([]AuthConfig, bool) {
 	// range over the index as iterating over a map does not provide a predictable ordering
-	ret := []TrackedAuthConfig{}
+	ret := []AuthConfig{}
 	for _, k := range dk.index {
 		// both k and image are schemeless URLs because even though schemes are allowed
 		// in the credential configurations, we remove them in Add.
@@ -314,16 +257,16 @@ func (dk *BasicDockerKeyring) Lookup(image string) ([]TrackedAuthConfig, bool) {
 		}
 	}
 
-	return []TrackedAuthConfig{}, false
+	return []AuthConfig{}, false
 }
 
 // Lookup implements the DockerKeyring method for fetching credentials
 // based on image name.
-func (dk *providersDockerKeyring) Lookup(image string) ([]TrackedAuthConfig, bool) {
+func (dk *providersDockerKeyring) Lookup(image string) ([]AuthConfig, bool) {
 	keyring := &BasicDockerKeyring{}
 
 	for _, p := range dk.Providers {
-		keyring.Add(nil, p.Provide(image))
+		keyring.Add(p.Provide(image))
 	}
 
 	return keyring.Lookup(image)
@@ -331,13 +274,13 @@ func (dk *providersDockerKeyring) Lookup(image string) ([]TrackedAuthConfig, boo
 
 // FakeKeyring a fake config credentials
 type FakeKeyring struct {
-	auth []TrackedAuthConfig
+	auth []AuthConfig
 	ok   bool
 }
 
 // Lookup implements the DockerKeyring method for fetching credentials based on image name
 // return fake auth and ok
-func (f *FakeKeyring) Lookup(image string) ([]TrackedAuthConfig, bool) {
+func (f *FakeKeyring) Lookup(image string) ([]AuthConfig, bool) {
 	return f.auth, f.ok
 }
 
@@ -346,8 +289,8 @@ type UnionDockerKeyring []DockerKeyring
 
 // Lookup implements the DockerKeyring method for fetching credentials based on image name.
 // return each credentials
-func (k UnionDockerKeyring) Lookup(image string) ([]TrackedAuthConfig, bool) {
-	authConfigs := []TrackedAuthConfig{}
+func (k UnionDockerKeyring) Lookup(image string) ([]AuthConfig, bool) {
+	authConfigs := []AuthConfig{}
 	for _, subKeyring := range k {
 		if subKeyring == nil {
 			continue
@@ -358,15 +301,4 @@ func (k UnionDockerKeyring) Lookup(image string) ([]TrackedAuthConfig, bool) {
 	}
 
 	return authConfigs, (len(authConfigs) > 0)
-}
-
-func hashAuthConfig(creds *AuthConfig) string {
-	credBytes, err := json.Marshal(creds)
-	if err != nil {
-		return ""
-	}
-
-	hash := sha256.New()
-	hash.Write([]byte(credBytes))
-	return hex.EncodeToString(hash.Sum(nil))
 }

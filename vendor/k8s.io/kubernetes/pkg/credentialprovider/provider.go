@@ -42,6 +42,15 @@ type DockerConfigProvider interface {
 // A DockerConfigProvider that simply reads the .dockercfg file
 type defaultDockerConfigProvider struct{}
 
+// init registers our default provider, which simply reads the .dockercfg file.
+func init() {
+	RegisterCredentialProvider(".dockercfg",
+		&CachingDockerConfigProvider{
+			Provider: &defaultDockerConfigProvider{},
+			Lifetime: 5 * time.Minute,
+		})
+}
+
 // CachingDockerConfigProvider implements DockerConfigProvider by composing
 // with another DockerConfigProvider and caching the DockerConfig it provides
 // for a pre-specified lifetime.
@@ -97,17 +106,4 @@ func (d *CachingDockerConfigProvider) Provide(image string) DockerConfig {
 		d.expiration = time.Now().Add(d.Lifetime)
 	}
 	return config
-}
-
-// NewDefaultDockerKeyring creates a DockerKeyring to use for resolving credentials,
-// which returns the default credentials from the .dockercfg file.
-func NewDefaultDockerKeyring() DockerKeyring {
-	return &providersDockerKeyring{
-		Providers: []DockerConfigProvider{
-			&CachingDockerConfigProvider{
-				Provider: &defaultDockerConfigProvider{},
-				Lifetime: 5 * time.Minute,
-			},
-		},
-	}
 }

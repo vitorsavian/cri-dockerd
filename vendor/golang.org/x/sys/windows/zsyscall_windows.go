@@ -517,6 +517,7 @@ var (
 	procFreeAddrInfoW                                        = modws2_32.NewProc("FreeAddrInfoW")
 	procGetAddrInfoW                                         = modws2_32.NewProc("GetAddrInfoW")
 	procWSACleanup                                           = modws2_32.NewProc("WSACleanup")
+	procWSADuplicateSocketW                                  = modws2_32.NewProc("WSADuplicateSocketW")
 	procWSAEnumProtocolsW                                    = modws2_32.NewProc("WSAEnumProtocolsW")
 	procWSAGetOverlappedResult                               = modws2_32.NewProc("WSAGetOverlappedResult")
 	procWSAIoctl                                             = modws2_32.NewProc("WSAIoctl")
@@ -4446,8 +4447,6 @@ func WSACleanup() (err error) {
 	return
 }
 
-<<<<<<< HEAD
-=======
 func WSADuplicateSocket(s Handle, processID uint32, info *WSAProtocolInfo) (err error) {
 	r1, _, e1 := syscall.SyscallN(procWSADuplicateSocketW.Addr(), uintptr(s), uintptr(processID), uintptr(unsafe.Pointer(info)))
 	if r1 != 0 {
@@ -4456,7 +4455,6 @@ func WSADuplicateSocket(s Handle, processID uint32, info *WSAProtocolInfo) (err 
 	return
 }
 
->>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 func WSAEnumProtocols(protocols *int32, protocolBuffer *WSAProtocolInfo, bufferLength *uint32) (n int32, err error) {
 	r0, _, e1 := syscall.SyscallN(procWSAEnumProtocolsW.Addr(), uintptr(unsafe.Pointer(protocols)), uintptr(unsafe.Pointer(protocolBuffer)), uintptr(unsafe.Pointer(bufferLength)))
 	n = int32(r0)
