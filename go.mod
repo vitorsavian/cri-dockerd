@@ -23,9 +23,9 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.9.0
 	github.com/vishvananda/netlink v1.2.1-beta.2
-	golang.org/x/sync v0.14.0
-	golang.org/x/sys v0.33.0
-	google.golang.org/grpc v1.62.0
+	golang.org/x/sync v0.19.0
+	golang.org/x/sys v0.40.0
+	google.golang.org/grpc v1.62.1
 	k8s.io/api v0.29.15
 	k8s.io/apimachinery v0.29.15
 	k8s.io/apiserver v0.29.15

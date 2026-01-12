@@ -485,6 +485,7 @@ go.uber.org/zap/internal/pool
 go.uber.org/zap/internal/stacktrace
 go.uber.org/zap/zapcore
 go.uber.org/zap/zapgrpc
+<<<<<<< HEAD
 # go.yaml.in/yaml/v2 v2.4.2
 ## explicit; go 1.15
 go.yaml.in/yaml/v2
@@ -493,14 +494,26 @@ go.yaml.in/yaml/v2
 go.yaml.in/yaml/v3
 # golang.org/x/crypto v0.36.0
 ## explicit; go 1.23.0
+=======
+# golang.org/x/crypto v0.47.0
+## explicit; go 1.24.0
+>>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 golang.org/x/crypto/cryptobyte
 golang.org/x/crypto/cryptobyte/asn1
 # golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
 ## explicit; go 1.20
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
+<<<<<<< HEAD
 # golang.org/x/net v0.38.0
 ## explicit; go 1.23.0
+=======
+# golang.org/x/mod v0.31.0
+## explicit; go 1.24.0
+golang.org/x/mod/semver
+# golang.org/x/net v0.48.0
+## explicit; go 1.24.0
+>>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 golang.org/x/net/context
 golang.org/x/net/html
 golang.org/x/net/html/atom
@@ -518,21 +531,38 @@ golang.org/x/net/websocket
 ## explicit; go 1.23.0
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
+<<<<<<< HEAD
 # golang.org/x/sync v0.12.0
 ## explicit; go 1.23.0
 golang.org/x/sync/errgroup
 golang.org/x/sync/singleflight
 # golang.org/x/sys v0.31.0
 ## explicit; go 1.23.0
+=======
+# golang.org/x/sync v0.19.0
+## explicit; go 1.24.0
+golang.org/x/sync/errgroup
+golang.org/x/sync/singleflight
+# golang.org/x/sys v0.40.0
+## explicit; go 1.24.0
+>>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
+<<<<<<< HEAD
 # golang.org/x/term v0.30.0
 ## explicit; go 1.23.0
 golang.org/x/term
 # golang.org/x/text v0.23.0
 ## explicit; go 1.23.0
+=======
+# golang.org/x/term v0.39.0
+## explicit; go 1.24.0
+golang.org/x/term
+# golang.org/x/text v0.33.0
+## explicit; go 1.24.0
+>>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 golang.org/x/text/feature/plural
 golang.org/x/text/internal
 golang.org/x/text/internal/catmsg
@@ -552,8 +582,38 @@ golang.org/x/text/unicode/norm
 # golang.org/x/time v0.9.0
 ## explicit; go 1.18
 golang.org/x/time/rate
+<<<<<<< HEAD
 # google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb
 ## explicit; go 1.23.0
+=======
+# golang.org/x/tools v0.40.0
+## explicit; go 1.24.0
+golang.org/x/tools/cmd/stringer
+golang.org/x/tools/go/ast/edge
+golang.org/x/tools/go/ast/inspector
+golang.org/x/tools/go/gcexportdata
+golang.org/x/tools/go/packages
+golang.org/x/tools/go/types/objectpath
+golang.org/x/tools/go/types/typeutil
+golang.org/x/tools/internal/aliases
+golang.org/x/tools/internal/event
+golang.org/x/tools/internal/event/core
+golang.org/x/tools/internal/event/keys
+golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/gcimporter
+golang.org/x/tools/internal/gocommand
+golang.org/x/tools/internal/packagesinternal
+golang.org/x/tools/internal/pkgbits
+golang.org/x/tools/internal/stdlib
+golang.org/x/tools/internal/typeparams
+golang.org/x/tools/internal/typesinternal
+golang.org/x/tools/internal/versions
+# google.golang.org/genproto v0.0.0-20240123012728-ef4313101c80
+## explicit; go 1.19
+google.golang.org/genproto/internal
+# google.golang.org/genproto/googleapis/api v0.0.0-20240123012728-ef4313101c80
+## explicit; go 1.19
+>>>>>>> 7d580772 (bump golang.org/x/crypto to v0.47.0)
 google.golang.org/genproto/googleapis/api
 google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/api/expr/v1alpha1
