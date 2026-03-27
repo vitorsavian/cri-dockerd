@@ -7,15 +7,15 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
     - name: Load environment
-      uses: c-py/action-dotenv-to-setenv@v4
+      uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a # v4
       with:
         env-file: .github/.env
 
     - name: Set up Go ${{ env.GO_VERSION }}
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
       with:
         go-version: ${{ env.GO_VERSION }}
 
@@ -24,7 +24,7 @@ jobs:
 
     - name: Upload
       if: ${{ github.event_name == 'release' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: cri-dockerd.ubuntu
         retention-days: 5
@@ -38,15 +38,15 @@ jobs:
         arch: [amd64, arm64]
     runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
     - name: Load environment
-      uses: c-py/action-dotenv-to-setenv@v4
+      uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a # v4
       with:
         env-file: .github/.env
 
     - name: Set up Go ${{ env.GO_VERSION }}
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
       with:
         go-version: ${{ env.GO_VERSION }}
 
@@ -54,7 +54,7 @@ jobs:
       run: make ARCH=${{ matrix.arch }} deb
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: cri-dockerd.deb-${{ matrix.arch }}
         retention-days: 5
@@ -65,15 +65,15 @@ jobs:
     if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
     - name: Load environment
-      uses: c-py/action-dotenv-to-setenv@v4
+      uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a # v4
       with:
         env-file: .github/.env
 
     - name: Set up Go ${{ env.GO_VERSION }}
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
       with:
         go-version: ${{ env.GO_VERSION }}
 
@@ -81,7 +81,7 @@ jobs:
       run: make rpm
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: cri-dockerd.rpm
         retention-days: 5
@@ -92,15 +92,15 @@ jobs:
     if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
     - name: Load environment
-      uses: c-py/action-dotenv-to-setenv@v4
+      uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a # v4
       with:
         env-file: .github/.env
 
     - name: Set up Go ${{ env.GO_VERSION }}
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
       with:
         go-version: ${{ env.GO_VERSION }}
 
@@ -108,7 +108,7 @@ jobs:
       run: make cross-arm
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: cri-dockerd.arm
         retention-days: 5
@@ -118,15 +118,15 @@ jobs:
   windows:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
     - name: Load environment
-      uses: c-py/action-dotenv-to-setenv@v4
+      uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a # v4
       with:
         env-file: .github/.env
 
     - name: Set up Go ${{ env.GO_VERSION }}
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
       with:
         go-version: ${{ env.GO_VERSION }}
 
@@ -135,7 +135,7 @@ jobs:
 
     - name: Upload
       if: ${{ github.event_name == 'release' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: cri-dockerd.win
         retention-days: 5
@@ -148,15 +148,15 @@ jobs:
         arch: [amd64, arm64]
     runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
     - name: Load environment
-      uses: c-py/action-dotenv-to-setenv@v4
+      uses: c-py/action-dotenv-to-setenv@80f488cda311f44d43e687a4e94f54a050b7822a # v4
       with:
         env-file: .github/.env
 
     - name: Set up Go ${{ env.GO_VERSION }}
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
       with:
         go-version: ${{ env.GO_VERSION }}
 
@@ -165,7 +165,7 @@ jobs:
 
     - name: Upload
       if: ${{ github.event_name == 'release' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: cri-dockerd.darwin-${{ matrix.arch }}
         retention-days: 5
