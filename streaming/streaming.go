@@ -28,7 +28,7 @@ import (
 
 	dockertypes "github.com/docker/docker/api/types"
 
-	"k8s.io/kubelet/pkg/cri/streaming"
+	"k8s.io/cri-streaming/pkg/streaming"
 
 	"github.com/Mirantis/cri-dockerd/libdocker"
 )
