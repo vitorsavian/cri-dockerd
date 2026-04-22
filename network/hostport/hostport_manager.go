@@ -228,7 +228,18 @@ func (hm *hostportManager) Add(
 			if isIPv6 {
 				ipfamily = unix.AF_INET6
 			}
-			_, err = conntrackExecer.ClearEntries(uint8(ipfamily), filter)
+			entries, listErr := conntrackExecer.ListEntries(uint8(ipfamily))
+			if listErr != nil {
+				logrus.Errorf("Failed to list conntrack entries for port %d: %v", port, listErr)
+			} else {
+				var toDelete []*netlink.ConntrackFlow
+				for _, e := range entries {
+					if filter.MatchConntrackFlow(e) {
+						toDelete = append(toDelete, e)
+					}
+				}
+				_, err = conntrackExecer.DeleteEntries(uint8(ipfamily), toDelete)
+			}
 			if err != nil {
 				logrus.Errorf("Failed to clear udp conntrack for port %d: %v", port, err)
 			}
